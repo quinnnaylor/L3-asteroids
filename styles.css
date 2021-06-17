@@ -1,0 +1,13 @@
+html {
+    background-color: aqua;
+}
+
+body {
+    display: block;
+}
+
+canvas {
+    display: block;
+    margin: 8vh auto;
+
+}

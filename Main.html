@@ -1,0 +1,149 @@
+<!doctype html>
+
+<head>
+    <title>Asteroids</title>
+    <script src="Player.js"></script>
+    <script src="Asteroids.js"></script>
+    <script src="Bullet.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <canvas id="gameCanvas" width="800" height="800"></canvas>
+    
+    <script>
+      
+      var canvas, canvasContext;
+      
+      window.onload = function () {
+        canvas = document.getElementById('gameCanvas');
+        canvasContext = canvas.getContext('2d');
+        
+        document.addEventListener('keydown', keyPressed);
+        document.addEventListener('keyup', keyReleased);
+        
+        setInterval(mainloop, 1000 / 50);
+      }
+      
+      // key codes
+      const UP_KEY = 87;
+      const DOWN_KEY = 83;
+      const LEFT_KEY = 65;
+      const RIGHT_KEY = 68;
+      const SPACE_key = 32
+      var upPressed = false;
+      var downPressed = false;
+      var leftPressed = false;
+      var rightPressed = false;
+      var spacePresed = false;
+      
+      var pXpos = 390;
+      var pYpos = 390;
+      var pXspeed = 2;
+      var pYspeed = 2;
+      const P_SIZE = 20;
+      
+      var player = new Player(pXpos, pYpos, P_SIZE, P_SIZE, 'red', pXspeed, pYspeed);
+      
+      var setUp = true;
+      
+      function mainloop() {
+        findSpawnPoint();
+
+        if (setUp) {
+          for (var i = 0; i < 10; i++) {
+            createEnemy();
+          }
+          // for (var i = 0; i < 10; i++) {
+            //   createBullet();
+            // }
+            setUp = false;
+          }
+          colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+          
+          player.drawRect() // player
+          player.playerMove();
+          
+          if (enemies.length > 0) {
+            enemies.forEach(function (enemy, i, array) {
+              enemy.drawRect();
+              enemy.enemyMove();
+              
+              if(enemy.PlayerDeath()){
+                console.log('dead');
+              }
+            }); // end foreach
+          } // end if 
+        }
+        
+        var spawnPoints = ["up", "down", "left", "right"]
+
+        function findSpawnPoint() {      
+            spawnPoints[Math.floor(Math.random()*3)];
+        }
+
+        var enemies = [];
+        
+        function createEnemy() {
+          // enemy vars
+          var eSize = Math.floor(Math.random() * (20 - 10) + 20);
+          var eYpos = eSize;
+          // var eYpos =  Math.floor(Math.random() * (canvas.height - eSize));
+          var eXpos = Math.floor(Math.random() * (canvas.width - eSize));
+          var eXspeed = Math.floor(Math.random() * (4 - 8) + 8);
+          var eYspeed = Math.floor(Math.random() * (4 - 8) + 8);
+          
+          // create enemy class with vars
+          var enemy = new Enemy(eXpos, eYpos, eSize, eSize, 'purple', eXspeed, eYspeed);
+          // add enemy to enemies array
+          enemies.push(enemy);
+          
+          // findSpawnPoint();
+          // if (findSpawnPoint() == "up") {
+          //   console.log("up");
+          // }
+        } // end func
+        
+        function keyPressed(evt) {
+          if (evt.keyCode == UP_KEY) {
+            upPressed = true;
+          }
+          if (evt.keyCode == DOWN_KEY) {
+            downPressed = true;
+          }
+          if (evt.keyCode == LEFT_KEY) {
+            leftPressed = true;
+          }
+          if (evt.keyCode == RIGHT_KEY) {
+            rightPressed = true;
+          }
+          if (evt.keyCode == SPACE_key) {
+            spacePresed = true;
+            createBullet();
+          }
+        }
+        
+        function keyReleased(evt) {
+          if (evt.keyCode == UP_KEY) {
+            upPressed = false;
+          }
+          if (evt.keyCode == DOWN_KEY) {
+            downPressed = false;
+          }
+          if (evt.keyCode == LEFT_KEY) {
+            leftPressed = false;
+          }
+          if (evt.keyCode == RIGHT_KEY) {
+            rightPressed = false;
+          }
+          if (evt.keyCode == SPACE_key) {
+            spacePressed = false;
+          }
+        }
+        
+        function colorRect(x, y, w, h, c) {
+          canvasContext.fillStyle = c;
+          canvasContext.fillRect(x, y, w, h);
+        }
+      </script>
+    </body>
