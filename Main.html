@@ -71,159 +71,120 @@
 
     var setUp = true;
 
-    
+
     function mainloop() {
       // findSpawnPoint();
       // player.ratefunc();
-      
+
       if (setUp) {
         for (var i = 0; i < 10; i++) {
           createEnemy();
         }
         // for (var i = 0; i < 10; i++) {
-          //   createBullet();
-          // }
-          setUp = false;
-        }
-        colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-        
-        
-        
-        player.drawRect() // player
-        player.playerMove();
-        player.playerSides();
-        
-        // Bullet.bulletSpeed();
-        
-        if (enemies.length > 0) {
-          enemies.forEach(function (enemy, i, array) {
-            enemy.drawRect();
-            // enemy.spawnFunc();
-            enemy.enemyMove();
-            
-            if (enemy.PlayerDeath()) {
-              enemy.respawn();
-            }
-            
-            if (enemy.outOfBounds()) {
-              enemy.respawn();
-            }
-            
-          }); // end foreach
-        } // end if 
-        if (bullets.length > 0) {
-          bullets.forEach(function (bullet, i, array){
-            bullet.drawRect();
-            bullet.bulletMove();
-          })
-        }
+        //   createBullet();
+        // }
+        setUp = false;
       }
-      
-      var mouseX, mouseY;
-      
-      var fire = false;
-      
-      function mouseAction(evt) {
-        var rect = canvas.getBoundingClientRect();
-        var root = document.documentElement;
-        mouseX = evt.clientX - rect.left - root.scrollLeft;
-        mouseY = evt.clientY - rect.top - root.scrollTop;
-        distanceToMouse();
+      colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+
+      Reload();
+
+      player.drawRect(); // player
+      player.playerMove();
+      player.playerSides();
+
+      // Bullet.bulletSpeed();
+
+      if (enemies.length > 0) {
+        enemies.forEach(function (enemy, i, array) {
+          enemy.drawRect();
+          // enemy.spawnFunc();
+          enemy.enemyMove();
+
+          if (enemy.PlayerDeath()) {
+            enemy.respawn();
+          }
+
+          if (enemy.outOfBounds()) {
+            enemy.respawn();
+          }
+
+        }); // end foreach
+      } // end if 
+      if (bullets.length > 0) {
+        bullets.forEach(function (bullet, i, array) {
+          bullet.drawRect();
+          bullet.bulletMove();
+        })
+      }
+    }
+
+    var mouseX, mouseY;
+
+    var fire = true;
+
+    var reloadTime = 0;
+
+    function Reload() {
+      reloadTime ++; 
+      if(reloadTime > 30){
+        fire = true;
+      }
+    }
+
+    function mouseAction(evt) {
+      var rect = canvas.getBoundingClientRect();
+      var root = document.documentElement;
+      mouseX = evt.clientX - rect.left - root.scrollLeft;
+      mouseY = evt.clientY - rect.top - root.scrollTop;
+
+      console.log(fire)
+      if (fire == true) {
+        fire = false;
         createBullet();
-        return {
-          x: mouseX,
+        reloadTime = 0;
+      }
+
+      return {
+        x: mouseX,
         y: mouseY
       }
     }
-    
+
     var bullets = [];
+
     
-    var bulletXspeed = 0;
-    var bulletYspeed = 10;
-
-
+    
     function createBullet() {
       console.log('pew')
       
       // var bullet = new Bullet(bXpos, bYpos, bSize, bSize, 'white', bSpeed, bSpeed);
       const B_SIZE = 10;
       var bYpos = player.y + player.h / 2 - B_SIZE / 2;
-      var bXpos = player.x + player.w / 2 - B_SIZE / 2; 
+      var bXpos = player.x + player.w / 2 - B_SIZE / 2;
+
+      var bulletVelocity = 10;
       
+      var angle = Math.atan2(mouseX - player.x, mouseY - player.y);
+      
+      var bulletXspeed = (bulletVelocity) * Math.sin(angle);
+      var bulletYspeed = (bulletVelocity) * Math.cos(angle);
       // bulletXspeed = 0;
-      
+
       // var bulletYspeed = 10;
       var bullet = new Bullet(bXpos, bYpos, B_SIZE, B_SIZE, 'blue', bulletXspeed, bulletYspeed);
       // var bSpeed = 10;
       bullets.push(bullet);
     }
-    
-    // var DistanceTM_YT = 0;
-    // var DistanceTM_YB = 0;  
-    // var DistanceTM_XL = 0;
-    // var DistanceTM_XR = 0;
 
-    var mouseXdisPlayerX = 0;
-    var mouseYdisPlayerY = 0;
-    // var DistanceTM_YB = 0;  
-    // var DistanceTM_XL = 0;
-    // var DistanceTM_XR = 0;
-
-    function distanceToMouse() {
-
-      // DistanceTM_XL = player.x - mouseX;
-      // DistanceTM_XR = player.x + mouseX;
-
-      // DistanceTM_YT = player.y - mouseY;
-      // DistanceTM_YB = player.y + mouseY;
-
-      mouseXdisPlayerX = mouseX - player.x;
-      mouseYdisPlayerY = mouseY - player.y;
-      
-      if(mouseXdisPlayerX < 0 && mouseYdisPlayerY < 0){
-        console.log('top left');
-
-        bulletXspeed = -5;
-        bulletYspeed = -5;
-      } 
-      
-      else if(mouseXdisPlayerX < 0 && mouseYdisPlayerY > 0){
-        console.log('bottom left');
-       
-        bulletXspeed = -5;
-        bulletYspeed = 5;
-      }
-      
-      else if(mouseXdisPlayerX > 0 && mouseYdisPlayerY < 0){
-        console.log('top right');
-
-        bulletXspeed = 5;
-        bulletYspeed = -5;
-      } 
-      
-      else if(mouseXdisPlayerX > 0 && mouseYdisPlayerY > 0){
-        console.log('bottom right');
-        
-        bulletXspeed = 5;
-        bulletYspeed = 5;
-      }
-      
-    }
-    
-    
-    // function bulletSpeed() {
-      //   if (){
-        
-        //   }
-        //   else if (){
-        
-    //   }
-    //   else if (){
-        
-    //   }
-    //    (){
-        
-    //   }
+    // function ShootBullet()
+    // {
+        // double bulletVelocity = 1.0; //however fast you want your bullet to travel
+        //mouseX/Y = current x/y location of the mouse
+        //originX/Y = x/y location of where the bullet is being shot from
+        // double angle = Math.Atan2(mouseX - originX, mouseY - originY);
+    //     double xVelocity = (bulletVelocity) * Math.Cos(angle);
+    //     double yVelocity = (bulletVelocity) * Math.Sin(angle);
     // }
 
     var spawnPoints = ["up", "down", "left", "right"]
