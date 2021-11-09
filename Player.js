@@ -1,36 +1,22 @@
 class Player {
-  constructor(x, y, w, h, c, xSpeed, ySpeed, rate) {
+  constructor(img ,x, y, w, h,  xSpeed, ySpeed, rate) {
+    this.img = img;
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.c = c;
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
     this.rate = rate;
   }
 
-  drawRect() {
-    canvasContext.fillStyle = this.c;
-    canvasContext.fillRect(this.x, this.y, this.w, this.h);
+  drawImg() {
+    canvasContext.drawImage(this.img, this.x, this.y, this.w, this.h)
   }
 
-  // ratefunc() {
-  //   if (rightPressed) {
-  //     this.xSpeed + rate;
-  //   }
-
-  //   if (leftPressed) {
-  //     this.xSpeed - rate;
-  //   }
-
-  //   if (upPressed) {
-  //     this.ySpeed - rate;
-  //   }
-
-  //   if (downPressed) {
-  //     this.ySpeed + rate;
-  //   }
+  // drawRect() {
+  //   canvasContext.fillStyle = this.c;
+  //   canvasContext.fillRect(this.x, this.y, this.w, this.h);
   // }
 
   playerSides(){

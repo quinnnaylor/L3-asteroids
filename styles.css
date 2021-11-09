@@ -2,15 +2,70 @@ html {
     background-color: black;
 }
 
-body {
-    display: block;
+img {
+    grid-row: 1/1;
+    grid-column: 1/1;
+    width: 100%;
+    height: 100%;
+    place-self: center;
 }
 
+#homeScreen {
+    height: 40%;
+    width: 40%;
+}
+
+#deathScreen {
+    height: 40%;
+    width: 40%;
+}
+
+#winScreen {
+    height: 40%;
+    width: 40%;
+}
+
+#startButton {
+    width: 30%;
+    margin-right: 50px;
+}
+
+#menuButton {
+    width: 30%;
+    margin-right: 50px;
+    display: none;
+}
+
+
 canvas {
-    display: block;
-    margin: 4vh auto;
-    border: white;
-    border-style: solid;
-    border-width: 12px;
-    
+    background-image: url('images/canvasBackground.jpg');
+    margin: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    align-self: center;
+    grid-row: 1/1;
+    grid-column: 1/1;
+    display: none;
+    border: 12px solid white;
+}
+
+body {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    justify-items: center;
+    margin: auto;
+
+}
+
+section {
+    display: grid;
+    width: 1fr;
+    margin: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-row: 1/1;
+    grid-column: 1/1;
+    justify-items: center;
+    margin: auto;
 }

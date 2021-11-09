@@ -1,6 +1,7 @@
 <!doctype html>
 
 <head>
+  <!-- linking files to main file -->
   <title>Asteroids</title>
   <script src="Player.js"></script>
   <script src="Asteroids.js"></script>
@@ -9,27 +10,60 @@
 </head>
 
 <body>
+  <!-- adding images and canvas -->
   <canvas id="gameCanvas" width="800" height="800"></canvas>
+  <img alt="" id="homeScreen" src="images/startScreen.jpg">
+  <img alt="" id="deathScreen" src="images/deathScreen.jpg">
+  <img alt="" id="winScreen" src="images/youWon.jpg">
+    <section>
+      <img alt="" id="startButton" src="images/startButton.png" onclick="play()">
+      <img alt="" id="menuButton" src="images/menuButton.png" onclick="reload()"> 
+    </section>
 
   <script>
+    // saying what it is and what its drawing on the page 
     var canvas, canvasContext;
 
     window.onload = function () {
       canvas = document.getElementById('gameCanvas');
       canvasContext = canvas.getContext('2d');
-
+      
       document.addEventListener('keydown', keyPressed);
       document.addEventListener('keyup', keyReleased);
-
+      
+      // mouse func and mouse positions 
       canvas.addEventListener('mousedown', function (evt) {
         var mousePos = mouseAction(evt);
         // var mouseClicked = MouseEvent(evt);
         mouseX = mousePos.x;
         mouseY = mousePos.y;
       });
-
-
+      
+      
       setInterval(mainloop, 1000 / 50);
+    }
+
+    var setUp = false;
+    var gameRun = true;
+
+    function play() {
+            setUp = true;
+            document.getElementById('gameCanvas').style.display = 'block';
+            document.getElementById('startButton').style.display = 'none';
+            document.getElementById('deathScreen').style.display = 'none';
+            document.getElementById('menuButton').style.display = 'none';
+            document.getElementById('youWon').style.display = 'none';
+        } // start
+        
+    function youWin() {
+      if (score >= 50) {
+        
+        document.getElementById('gameCanvas').style.display = 'none';
+        document.getElementById('startButton').style.display = 'none';
+        document.getElementById('deathScreen').style.display = 'none';
+        document.getElementById('menuButton').style.display = 'none';
+        document.getElementById('youWon').style.display = 'none';
+      }
     }
 
     // key codes
@@ -37,7 +71,7 @@
     const DOWN_KEY = 83;
     const LEFT_KEY = 65;
     const RIGHT_KEY = 68;
-    const SPACE_key = 32
+    const SPACE_key = 32;
     var upPressed = false;
     var downPressed = false;
     var leftPressed = false;
@@ -61,23 +95,35 @@
       rate = 0.8;
     } //end of game dificulty code
 
+    var username = '';
+    while (username == '' || username == 'null') {
+      username = prompt('whats your name?') || ''; // your name please        } // end of username code
+    }
+
     var pXpos = 390;
     var pYpos = 390;
-    var pXspeed = 2;
-    var pYspeed = 2;
-    const P_SIZE = 20;
+    var pXspeed = 0;
+    var pYspeed = 0;
+    const P_SIZE = 30;
 
-    var player = new Player(pXpos, pYpos, P_SIZE, P_SIZE, 'red', pXspeed, pYspeed, rate);
+    var ship = new Image();
+    ship.src = 'images/ship_for_game.png';
+    
 
-    var setUp = true;
+    var player = new Player(ship, pXpos, pYpos, P_SIZE, P_SIZE, pXspeed, pYspeed, rate);
+    var health = 3;
+
+    var score = 49;
+
 
 
     function mainloop() {
       // findSpawnPoint();
       // player.ratefunc();
-
+      
+      
       if (setUp) {
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < 15; i++) {
           createEnemy();
         }
         // for (var i = 0; i < 10; i++) {
@@ -86,18 +132,23 @@
         setUp = false;
       }
       colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+      colorText('score:' + score, 25, 18, '20px Arial', 'white')
 
       Reload();
+      // colorText('lives:' + lives, 25, 18, '20px Arial', 'white')
+      // colorText('Name:' + username, 465, 18, '20px Arial', 'white')
 
-      player.drawRect(); // player
+      player.drawImg();   
       player.playerMove();
       player.playerSides();
 
       // Bullet.bulletSpeed();
 
+      var moreEnemy = false;
+
       if (enemies.length > 0) {
         enemies.forEach(function (enemy, i, array) {
-          enemy.drawRect();
+          enemy.drawImg();
           // enemy.spawnFunc();
           enemy.enemyMove();
 
@@ -108,15 +159,39 @@
           if (enemy.outOfBounds()) {
             enemy.respawn();
           }
+          if(moreEnemy){
+            enemy.respawn();
+            moreEnemy = false;
+   
+        }
 
         }); // end foreach
       } // end if 
       if (bullets.length > 0) {
         bullets.forEach(function (bullet, i, array) {
-          bullet.drawRect();
+          bullet.drawImg();
           bullet.bulletMove();
+
+          if (bullet.outOfBounds()) {
+            delete bullets[i];
+            
+          }
+          if(bullet.hasCollided()){
+            moreEnemy = true;
+            delete bullets[i];
+          }
         })
+        bullets = bullets.filter(item => item !== undefined);
       }
+
+      if (health <= 0) {
+        setUp = false
+      } // game ends
+
+      if (score >= 50) {
+        setUp = false
+      }
+
     }
 
     var mouseX, mouseY;
@@ -138,7 +213,7 @@
       mouseX = evt.clientX - rect.left - root.scrollLeft;
       mouseY = evt.clientY - rect.top - root.scrollTop;
 
-      console.log(fire)
+      // console.log(fire)
       if (fire == true) {
         fire = false;
         createBullet();
@@ -156,9 +231,7 @@
     
     
     function createBullet() {
-      console.log('pew')
-      
-      // var bullet = new Bullet(bXpos, bYpos, bSize, bSize, 'white', bSpeed, bSpeed);
+
       const B_SIZE = 10;
       var bYpos = player.y + player.h / 2 - B_SIZE / 2;
       var bXpos = player.x + player.w / 2 - B_SIZE / 2;
@@ -169,11 +242,12 @@
       
       var bulletXspeed = (bulletVelocity) * Math.sin(angle);
       var bulletYspeed = (bulletVelocity) * Math.cos(angle);
-      // bulletXspeed = 0;
 
-      // var bulletYspeed = 10;
-      var bullet = new Bullet(bXpos, bYpos, B_SIZE, B_SIZE, 'blue', bulletXspeed, bulletYspeed);
-      // var bSpeed = 10;
+      var phaser = new Image();
+      phaser.src = 'images/phaser.png';
+
+      var bullet = new Bullet(phaser, bXpos, bYpos, B_SIZE, B_SIZE, bulletXspeed, bulletYspeed);
+
       bullets.push(bullet);
     }
 
@@ -193,16 +267,19 @@
 
     function createEnemy() {
       // enemy vars
-      var eSize = Math.floor(Math.random() * (40 - 5) + 40);
-      var eYpos = eSize;
-      // var eYpos =  Math.floor(Math.random() * (canvas.height - eSize));
-      var eXpos = Math.floor(Math.random() * (canvas.width - eSize));
-      var eXspeed = Math.floor(Math.random() * (4 - 8) + 8);
-      var eYspeed = Math.floor(Math.random() * (4 - 8) + 8);
-
-      // create enemy class with vars
-      var enemy = new Enemy(eXpos, eYpos, eSize, eSize, 'purple', eXspeed, eYspeed);
-      // add enemy to enemies array
+      var eSize = 0;
+      var eYpos = 0;
+      var eXpos = 0;
+      var eXspeed = 0;
+      var eYspeed = 0;
+      
+      var asteroid = new Image();
+      asteroid.src = 'images/asteroidS1_for_game.png';
+      
+      // // create enemy class with vars
+      var enemy = new Enemy(asteroid, eXpos, eYpos, eSize, eSize, eXspeed, eYspeed);
+      enemy.respawn();
+      // // add enemy to enemies array
       enemies.push(enemy);
 
     } // end func
@@ -237,9 +314,19 @@
       }
     }
 
+    function drawImg(img, x, y, w, h) {
+      canvasContext.drawImage(img, x, y, w, h);
+    }// end of this func
+
     function colorRect(x, y, w, h, c) {
       canvasContext.fillStyle = c;
       canvasContext.fillRect(x, y, w, h);
     }
+
+    function colorText(msg, x, y, f, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillText(msg, x, y);
+            canvasContext.font = f; // '20px Arial
+        } //end of color text func
   </script>
 </body>

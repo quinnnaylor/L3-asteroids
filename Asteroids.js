@@ -1,18 +1,16 @@
 class Enemy {
-  constructor(x, y, w, h, c, xSpeed, ySpeed) {
+  constructor(img, x, y, w, h, xSpeed, ySpeed) {
+    this.img = img;
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.c = c;
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
-
   }
   
-  drawRect() {
-    canvasContext.fillStyle = this.c;
-    canvasContext.fillRect(this.x, this.y, this.w, this.h);
+  drawImg() {
+    canvasContext.drawImage(this.img, this.x, this.y, this.w, this.h)
   }
 
   PlayerDeath() {
@@ -31,8 +29,8 @@ class Enemy {
         this.h = Math.floor(Math.random() * (40 - 5) + 40);
         this.w = this.h;
         this.x = Math.floor(Math.random() * (canvas.width - this.h));
-        this.xSpeed = Math.floor(Math.random() * (-4 - 8) + 8);
-        this.ySpeed = Math.floor(Math.random() * (4 - 8) + 8);
+        this.xSpeed = Math.floor(Math.random() * (-3 - 6) + 6);
+        this.ySpeed = Math.floor(Math.random() * (3 - 6) + 6);
       }
       if (randSide == 'down') {
         this.y = canvas.height - this.h;
@@ -40,8 +38,8 @@ class Enemy {
         this.h = Math.floor(Math.random() * (40 - 5) + 40);
         this.w = this.h;
         this.x = Math.floor(Math.random() * (canvas.height - this.w));
-        this.xSpeed = Math.floor(Math.random() * (-4 - 8) + 8);
-        this.ySpeed = Math.floor(Math.random() * (4 - 8) + 8) * -1;
+        this.xSpeed = Math.floor(Math.random() * (-3 - 6) + 6);
+        this.ySpeed = Math.floor(Math.random() * (3 - 6) + 6) * -1;
       }
       if (randSide == 'left') {
         this.x = 0 - this.w;
@@ -49,8 +47,8 @@ class Enemy {
         this.h = Math.floor(Math.random() * (40 - 5) + 40);
         this.w = this.h;
         this.y = Math.floor(Math.random() * (canvas.height - this.h));
-        this.xSpeed = Math.floor(Math.random() * (4 - 8) + 8);
-        this.ySpeed = Math.floor(Math.random() * (-4 - 8) + 8);
+        this.xSpeed = Math.floor(Math.random() * (-3 - 6) + 6);
+        this.ySpeed = Math.floor(Math.random() * (3 - 6) + 6);
       }
       if (randSide == 'right') {
         this.x = canvas.width - this.w;
@@ -58,8 +56,8 @@ class Enemy {
         this.h = Math.floor(Math.random() * (40 - 5) + 40);
         this.w = this.h;
         this.y = Math.floor(Math.random() * (canvas.height - this.h));
-        this.xSpeed = Math.floor(Math.random() * (4 - 8) + 8) * -1;
-        this.ySpeed = Math.floor(Math.random() * (-4 - 8) + 8);
+        this.xSpeed = Math.floor(Math.random() * (-3 - 6) + 6) * -1;
+        this.ySpeed = Math.floor(Math.random() * (3 - 6) + 6);
       }
   }
 
