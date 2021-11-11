@@ -12,9 +12,8 @@
 <body>
   <!-- adding images and canvas -->
   <canvas id="gameCanvas" width="800" height="800"></canvas>
-  <img alt="" id="homeScreen" src="images/startScreen.jpg">
+  <img alt="" id="startScreen" src="images/startScreen.jpg">
   <img alt="" id="deathScreen" src="images/deathScreen.jpg">
-  <img alt="" id="winScreen" src="images/youWon.jpg">
     <section>
       <img alt="" id="startButton" src="images/startButton.png" onclick="play()">
       <img alt="" id="menuButton" src="images/menuButton.png" onclick="reload()"> 
@@ -50,9 +49,9 @@
             setUp = true;
             document.getElementById('gameCanvas').style.display = 'block';
             document.getElementById('startButton').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'none';
             document.getElementById('deathScreen').style.display = 'none';
             document.getElementById('menuButton').style.display = 'none';
-            document.getElementById('youWon').style.display = 'none';
         } // start
         
     function youWin() {
@@ -61,8 +60,8 @@
         document.getElementById('gameCanvas').style.display = 'none';
         document.getElementById('startButton').style.display = 'none';
         document.getElementById('deathScreen').style.display = 'none';
+        document.getElementById('startScreen').style.display = 'none';
         document.getElementById('menuButton').style.display = 'none';
-        document.getElementById('youWon').style.display = 'none';
       }
     }
 
@@ -133,6 +132,7 @@
       }
       colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
       colorText('score:' + score, 25, 18, '20px Arial', 'white')
+      colorText('health:' + health, 25, 18, '20px Arial', 'white')
 
       Reload();
       // colorText('lives:' + lives, 25, 18, '20px Arial', 'white')
@@ -154,6 +154,7 @@
 
           if (enemy.PlayerDeath()) {
             enemy.respawn();
+            health --;
           }
 
           if (enemy.outOfBounds()) {
