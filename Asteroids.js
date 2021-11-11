@@ -8,18 +8,22 @@ class Enemy {
     this.xSpeed = xSpeed;
     this.ySpeed = ySpeed;
   }
+  // end func
   
   drawImg() {
     canvasContext.drawImage(this.img, this.x, this.y, this.w, this.h)
   }
+    // end func
 
   PlayerDeath() {
     return (this.x + this.w > player.x && this.x < player.x + player.w) && (this.y + this.h > player.y && this.y < player.y + player.h);
   }
+    // end func
 
   outOfBounds(){
     return (this.x > canvas.width || this.x + this.w < 0 || this.y > canvas.height || this.y + this.h < 0);
   }
+    // end func
 
   respawn() {
     var randSide = spawnPoints[Math.floor(Math.random() * 4)]
@@ -60,9 +64,11 @@ class Enemy {
         this.ySpeed = Math.floor(Math.random() * (3 - 6) + 6);
       }
   }
+    // end func
 
   enemyMove() {
     this.y += this.ySpeed
     this.x += this.xSpeed
   }
+    // end func
 }

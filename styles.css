@@ -11,10 +11,16 @@ img {
 #startScreen {
     height: fill;
     width: fill;
-    display: none;
+    display: block;
 }
 
 #deathScreen {
+    height: fill;
+    width: fill;
+    display: none;
+}
+
+#winScreen {
     height: fill;
     width: fill;
     display: none;
@@ -25,14 +31,12 @@ img {
 }
 
 #menuButton {
-    width: 30%;
-    margin-right: 50px;
+    margin-top: 130%;
     display: none;
 }
 
 
 canvas {
-    background-image: url('images/canvasBackground.jpg');
     margin: auto;
     margin-right: auto;
     margin-top: 10px;

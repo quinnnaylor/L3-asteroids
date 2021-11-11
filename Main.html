@@ -1,23 +1,24 @@
 <!doctype html>
 
 <head>
-  <!-- linking files to main file -->
   <title>Asteroids</title>
   <script src="Player.js"></script>
   <script src="Asteroids.js"></script>
   <script src="Bullet.js"></script>
   <link rel="stylesheet" href="styles.css">
+  <!-- linking files to main file -->
 </head>
 
 <body>
-  <!-- adding images and canvas -->
   <canvas id="gameCanvas" width="800" height="800"></canvas>
   <img alt="" id="startScreen" src="images/startScreen.jpg">
   <img alt="" id="deathScreen" src="images/deathScreen.jpg">
-    <section>
-      <img alt="" id="startButton" src="images/startButton.png" onclick="play()">
-      <img alt="" id="menuButton" src="images/menuButton.png" onclick="reload()"> 
-    </section>
+  <img alt="" id="winScreen" src="images/winScreen.jpg">
+  <section>
+    <img alt="" id="startButton" src="images/startButton.png" onclick="play()">
+    <img alt="" id="menuButton" src="images/menuButton.png" onclick="reload()"> 
+    <!-- adding images and canvas -->
+  </section>
 
   <script>
     // saying what it is and what its drawing on the page 
@@ -44,26 +45,46 @@
 
     var setUp = false;
     var gameRun = true;
-
+    
     function play() {
-            setUp = true;
-            document.getElementById('gameCanvas').style.display = 'block';
-            document.getElementById('startButton').style.display = 'none';
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('deathScreen').style.display = 'none';
-            document.getElementById('menuButton').style.display = 'none';
-        } // start
+        setUp = true;
+        document.getElementById('gameCanvas').style.display = 'block';
+        document.getElementById('startButton').style.display = 'none';
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('deathScreen').style.display = 'none';
+        document.getElementById('winScreen').style.display = 'none';
+        document.getElementById('menuButton').style.display = 'none';
+    }
+      // end func
         
     function youWin() {
       if (score >= 50) {
-        
+        setUp = false;
         document.getElementById('gameCanvas').style.display = 'none';
         document.getElementById('startButton').style.display = 'none';
         document.getElementById('deathScreen').style.display = 'none';
         document.getElementById('startScreen').style.display = 'none';
-        document.getElementById('menuButton').style.display = 'none';
+        document.getElementById('winScreen').style.display = 'block';
+        document.getElementById('menuButton').style.display = 'block';
       }
     }
+      // end func
+
+      function youLose() {
+      if (health <= 0) {
+        setUp = false;
+        document.getElementById('gameCanvas').style.display = 'none';
+        document.getElementById('startButton').style.display = 'none';
+        document.getElementById('deathScreen').style.display = 'block';
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('winScreen').style.display = 'none';
+        document.getElementById('menuButton').style.display = 'block';
+      }
+    }  
+
+    function reload() {
+      location.reload();
+    }  
 
     // key codes
     const UP_KEY = 87;
@@ -80,6 +101,7 @@
     var difficulty = '';
     var rate = 0.00001;
     var pass = false;
+    // rate of aceleration
     while (pass == false) {
       difficulty = prompt('how hard do you want the game?', 'hard or easy?')
 
@@ -87,6 +109,7 @@
         pass = true;
       }
     }
+    //end of username and dificulty code
 
     if (difficulty == 'easy') {
       rate = 0.4;
@@ -96,9 +119,10 @@
 
     var username = '';
     while (username == '' || username == 'null') {
-      username = prompt('whats your name?') || ''; // your name please        } // end of username code
+      username = prompt('whats your name?') || ''; // your name please
     }
-
+    //end of username code
+    
     var pXpos = 390;
     var pYpos = 390;
     var pXspeed = 0;
@@ -112,91 +136,94 @@
     var player = new Player(ship, pXpos, pYpos, P_SIZE, P_SIZE, pXspeed, pYspeed, rate);
     var health = 3;
 
+    //player variables
+
     var score = 49;
 
 
-
     function mainloop() {
-      // findSpawnPoint();
-      // player.ratefunc();
-      
-      
-      if (setUp) {
-        for (var i = 0; i < 15; i++) {
-          createEnemy();
-        }
-        // for (var i = 0; i < 10; i++) {
-        //   createBullet();
-        // }
-        setUp = false;
-      }
-      colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-      colorText('score:' + score, 25, 18, '20px Arial', 'white')
-      colorText('health:' + health, 25, 18, '20px Arial', 'white')
+      if(gameRun){
 
-      Reload();
-      // colorText('lives:' + lives, 25, 18, '20px Arial', 'white')
-      // colorText('Name:' + username, 465, 18, '20px Arial', 'white')
-
-      player.drawImg();   
-      player.playerMove();
-      player.playerSides();
-
-      // Bullet.bulletSpeed();
-
-      var moreEnemy = false;
-
-      if (enemies.length > 0) {
-        enemies.forEach(function (enemy, i, array) {
-          enemy.drawImg();
-          // enemy.spawnFunc();
-          enemy.enemyMove();
-
-          if (enemy.PlayerDeath()) {
-            enemy.respawn();
-            health --;
+        if (setUp) {
+          for (var i = 0; i < 15; i++) {
+            createEnemy();
           }
-
-          if (enemy.outOfBounds()) {
-            enemy.respawn();
-          }
-          if(moreEnemy){
-            enemy.respawn();
-            moreEnemy = false;
-   
+          //limitations of amount of enemy
+          setUp = false;
         }
-
-        }); // end foreach
-      } // end if 
-      if (bullets.length > 0) {
-        bullets.forEach(function (bullet, i, array) {
-          bullet.drawImg();
-          bullet.bulletMove();
-
-          if (bullet.outOfBounds()) {
-            delete bullets[i];
+        colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+        colorText(username + ':' + score, 25, 18, '20px Arial', 'white')
+        colorText('health:' + health, canvas.width - 100, 18, '20px Arial', 'white')
+        //showing score health and canvas 
+        
+        Reload();
+        
+        player.drawImg();   
+        player.playerMove();
+        player.playerSides();
+        
+       
+        
+        var moreEnemy = false;
+        
+        if (enemies.length > 0) {
+          enemies.forEach(function (enemy, i, array) {
+            enemy.drawImg();
+            // enemy.spawnFunc();
+            enemy.enemyMove();
             
-          }
-          if(bullet.hasCollided()){
-            moreEnemy = true;
-            delete bullets[i];
-          }
-        })
-        bullets = bullets.filter(item => item !== undefined);
+            if (enemy.PlayerDeath()) {
+              enemy.respawn();
+              health --;
+            }
+            // health decreases when touching ememies 
+            if (enemy.outOfBounds()) {
+              enemy.respawn();
+            }
+            //enemies respawn when out of screen 
+            if(moreEnemy){
+              enemy.respawn();
+              moreEnemy = false;
+              // respawning more enemies 
+            }
+            
+          }); // end foreach
+        } // end if 
+        if (bullets.length > 0) {
+          bullets.forEach(function (bullet, i, array) {
+            bullet.drawImg();
+            bullet.bulletMove();
+            
+            if (bullet.outOfBounds()) {
+              delete bullets[i];
+            }
+            //end if
+            if(bullet.hasCollided()){
+              moreEnemy = true;
+              delete bullets[i];
+            }
+            //end if
+          })
+          bullets = bullets.filter(item => item !== undefined);
+        }
+        
+        if (health <= 0) {
+          setUp = false
+          gameRun = false;
+          youLose();
+        } // game ends
+        
+        if (score >= 50) {
+          setUp = false
+          gameRun = false;
+          youWin();
+        } // game ends
+      } 
+        
       }
-
-      if (health <= 0) {
-        setUp = false
-      } // game ends
-
-      if (score >= 50) {
-        setUp = false
-      }
-
-    }
-
-    var mouseX, mouseY;
-
+      
+      var mouseX, mouseY;
+      
     var fire = true;
 
     var reloadTime = 0;
@@ -206,20 +233,19 @@
       if(reloadTime > 30){
         fire = true;
       }
-    }
+    }// reload time fund
 
     function mouseAction(evt) {
       var rect = canvas.getBoundingClientRect();
       var root = document.documentElement;
       mouseX = evt.clientX - rect.left - root.scrollLeft;
       mouseY = evt.clientY - rect.top - root.scrollTop;
-
-      // console.log(fire)
+      // getting mouse positions
       if (fire == true) {
         fire = false;
         createBullet();
         reloadTime = 0;
-      }
+      }//end if
 
       return {
         x: mouseX,
@@ -240,6 +266,7 @@
       var bulletVelocity = 10;
       
       var angle = Math.atan2(mouseX - player.x, mouseY - player.y);
+      // getting angle of mouse 
       
       var bulletXspeed = (bulletVelocity) * Math.sin(angle);
       var bulletYspeed = (bulletVelocity) * Math.cos(angle);
@@ -250,17 +277,7 @@
       var bullet = new Bullet(phaser, bXpos, bYpos, B_SIZE, B_SIZE, bulletXspeed, bulletYspeed);
 
       bullets.push(bullet);
-    }
-
-    // function ShootBullet()
-    // {
-        // double bulletVelocity = 1.0; //however fast you want your bullet to travel
-        //mouseX/Y = current x/y location of the mouse
-        //originX/Y = x/y location of where the bullet is being shot from
-        // double angle = Math.Atan2(mouseX - originX, mouseY - originY);
-    //     double xVelocity = (bulletVelocity) * Math.Cos(angle);
-    //     double yVelocity = (bulletVelocity) * Math.Sin(angle);
-    // }
+    }// end func
 
     var spawnPoints = ["up", "down", "left", "right"]
 
@@ -298,7 +315,7 @@
       if (evt.keyCode == RIGHT_KEY) {
         rightPressed = true;
       }
-    }
+    }// end func
 
     function keyReleased(evt) {
       if (evt.keyCode == UP_KEY) {
@@ -313,21 +330,21 @@
       if (evt.keyCode == RIGHT_KEY) {
         rightPressed = false;
       }
-    }
+    }// end func
 
     function drawImg(img, x, y, w, h) {
       canvasContext.drawImage(img, x, y, w, h);
-    }// end of this func
+    }// end func
 
     function colorRect(x, y, w, h, c) {
       canvasContext.fillStyle = c;
       canvasContext.fillRect(x, y, w, h);
-    }
+    }// end func
 
     function colorText(msg, x, y, f, c) {
-            canvasContext.fillStyle = c;
-            canvasContext.fillText(msg, x, y);
-            canvasContext.font = f; // '20px Arial
-        } //end of color text func
+      canvasContext.fillStyle = c;
+      canvasContext.fillText(msg, x, y);
+      canvasContext.font = f; // '20px Arial
+    } //end of color text func
   </script>
 </body>

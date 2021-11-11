@@ -9,10 +9,12 @@ class Player {
     this.ySpeed = ySpeed;
     this.rate = rate;
   }
+    // end func
 
   drawImg() {
     canvasContext.drawImage(this.img, this.x, this.y, this.w, this.h)
   }
+    // end func
 
   // drawRect() {
   //   canvasContext.fillStyle = this.c;
@@ -33,6 +35,7 @@ class Player {
       this.y = 0 + this.h;
     }
   }
+    // end func
 
   playerMove() {
     this.x += this.xSpeed
@@ -54,12 +57,6 @@ class Player {
         this.ySpeed += this.rate;
 
       }
-
-      // for(rightPressed = true) {
-      //   this.x += rate;
-      // }
   }
-
-
-
+    // end func
 }
